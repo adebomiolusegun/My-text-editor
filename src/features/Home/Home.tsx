@@ -1,6 +1,10 @@
+import Header from "../../components/Header";
+
 function Home() {
   return (
-    <div className="flex justify-center h-screen w-screen text-3xl">Home</div>
+    <div>
+      <Header />
+    </div>
   );
 }
 
