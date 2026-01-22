@@ -1,11 +1,15 @@
-import Header from "@features/header/Header";
-import ToolsBar from "@features/toolsBar/ToolsBar";
+import Footer from "@components/Footer";
+import Header from "@components/Header";
+import TextArea from "@components/TextArea";
+import ToolsBar from "@components/ToolsBar";
 
 function Home() {
   return (
-    <div className="   h-screen w-1/2 mx-auto  flex flex-col boeder-b-2 border-gray-300">
+    <div className="h-screen w-screen flex flex-col ">
       <Header />
       <ToolsBar />
+      <TextArea />
+      <Footer />
     </div>
   );
 }

@@ -3,9 +3,10 @@ import { MdFormatListBulletedAdd } from "react-icons/md";
 function BulletList() {
   return (
     <div>
-      <MdFormatListBulletedAdd />
+      <button className="toolsBarBtn">
+        <MdFormatListBulletedAdd />
+      </button>
     </div>
   );
 }
-
 export default BulletList;

@@ -21,6 +21,7 @@
     "paths": {
       "@components/*": ["src/components/*"],
       "@features/*": ["src/features/*"],
+      "@UI/*": ["src/UI/*"],
       "@utils/*": ["src/utils/*"],
       "@hooks/*": ["src/hooks/*"],
       "@styles/*": ["src/styles/*"]
