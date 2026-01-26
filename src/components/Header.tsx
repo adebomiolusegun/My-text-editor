@@ -9,7 +9,7 @@ function Header() {
       <div className="flex justify-between items-center  h-11 w-screen  px-4">
         <Logo />
         <DocumentTitle />
-        <HeaderActions />
+        <HeaderActions id="themeToggle" />
       </div>
     </div>
   );

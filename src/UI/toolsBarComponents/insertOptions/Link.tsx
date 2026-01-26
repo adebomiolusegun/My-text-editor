@@ -1,4 +1,3 @@
-import React from "react";
 import { CiLink } from "react-icons/ci";
 
 function Link() {
