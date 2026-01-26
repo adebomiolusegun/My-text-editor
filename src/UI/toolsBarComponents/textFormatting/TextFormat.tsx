@@ -1,17 +1,58 @@
-import { LuHeading1 } from "react-icons/lu";
+import {
+  LuHeading1,
+  LuHeading2,
+  LuHeading3,
+  LuHeading4,
+  LuHeading5,
+  LuHeading6,
+} from "react-icons/lu";
 import { FaBold } from "react-icons/fa6";
 import { GoItalic } from "react-icons/go";
 import { LuUnderline } from "react-icons/lu";
 import { GoStrikethrough } from "react-icons/go";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
+import { MdOutlineKeyboardArrowUp } from "react-icons/md";
+import { useDropDownStore } from "@store/DropDownStore";
+import type { TextFormatProps } from "src/types";
 
-function TextFormat() {
+function TextFormat({ id }: TextFormatProps) {
+  const HeadingOpen = useDropDownStore((state) => state.isOpen);
+  const toggle = useDropDownStore((state) => state.toggle);
+
+  const isOpen = HeadingOpen === id;
+
   return (
     <div className="flex">
-      <button className="toolsBarBtn">
-        <LuHeading1 />
-        <MdOutlineKeyboardArrowDown />
-      </button>
+      <div>
+        <button onClick={() => toggle(id)} className="toolsBarBtn">
+          <LuHeading1 />
+          {isOpen ? (
+            <MdOutlineKeyboardArrowUp />
+          ) : (
+            <MdOutlineKeyboardArrowDown />
+          )}
+        </button>
+        {isOpen ? (
+          <div className="dropdownContainer">
+            <div className="dropdownContent">
+              <LuHeading2 />
+            </div>
+            <div className="dropdownContent">
+              <LuHeading3 />
+            </div>
+            <div className="dropdownContent">
+              <LuHeading4 />
+            </div>
+            <div className="dropdownContent">
+              <LuHeading5 />
+            </div>
+            <div className="dropdownContent">
+              <LuHeading6 />
+            </div>
+          </div>
+        ) : null}
+      </div>
+
       <button className="toolsBarBtn">
         <FaBold />
       </button>
@@ -27,5 +68,7 @@ function TextFormat() {
     </div>
   );
 }
+
+<TextFormat id="textFormat" />;
 
 export default TextFormat;

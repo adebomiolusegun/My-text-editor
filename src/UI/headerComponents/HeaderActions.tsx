@@ -1,10 +1,19 @@
-import { CgDarkMode } from "react-icons/cg";
 import { FaRegSave } from "react-icons/fa";
 import Profile from "./Profile";
+import { CiSun } from "react-icons/ci";
+import { LuMoonStar } from "react-icons/lu";
+import { useDropDownStore } from "@store/DropDownStore";
+
+import type { TextFormatProps } from "src/types";
 // import { LuUndo } from "react-icons/lu";
 // import { LuRedo } from "react-icons/lu";
 
-function HeaderActions() {
+function HeaderActions({ id }: TextFormatProps) {
+  const open = useDropDownStore((state) => state.isOpen);
+  const toggle = useDropDownStore((state) => state.toggle);
+
+  const isOpen = open === id;
+
   return (
     <div className="flex w-auto gap-4 justify-around items-center rounded-md h-7">
       <div className=" headerActionDivider">
@@ -12,9 +21,17 @@ function HeaderActions() {
           <button className="headerBtn">
             <FaRegSave className="" />
           </button>
-          <button className="headerBtn">
-            <CgDarkMode />
-          </button>
+        </div>
+        <div className="flex ">
+          {isOpen ? (
+            <button className="headerBtn" onClick={() => toggle(id)}>
+              <LuMoonStar className="hidden dark:block" />
+            </button>
+          ) : (
+            <button className="headerBtn" onClick={() => toggle(id)}>
+              <CiSun className="hidden dark:block" />
+            </button>
+          )}
         </div>
         <button className="headerBtn">
           <Profile />
@@ -23,5 +40,7 @@ function HeaderActions() {
     </div>
   );
 }
+
+<HeaderActions id="themeToggle" />;
 
 export default HeaderActions;
