@@ -9,18 +9,18 @@ import Image from "@UI/toolsBarComponents/insertOptions/Image";
 
 function ToolsBar() {
   return (
-    <div className="w-full border-b border-gray-300">
-      <div className="flex gap-4 h-11 px-4 sm:px-4 w-full sm:w-4/5  md:w-3/4 lg:w-1/2 lg:px-0 mx-auto items-center">
-        <div className=" flex gap-4 border-r pr-3 border-gray-300">
+    <div className="border-b borderBottom">
+      <div className="toolsbarSecDivContainer">
+        <div className=" flex gap-4  border-r pr-3 borderRight">
           <TextFormat id="textFormat" />
           <BulletList id="bulletList" />
           <BlockQuote />
           <CodeBlock />
         </div>
-        <div className=" border-r pr-3 border-gray-300">
+        <div className="  border-r pr-3 borderRight">
           <TextAlignment />
         </div>
-        <div className="  flex gap-4 border-r pr-3 border-gray-300">
+        <div className="  flex gap-4 borderRight">
           <Link />
           <Image />
         </div>

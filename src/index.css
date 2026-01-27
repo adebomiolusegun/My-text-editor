@@ -1,19 +1,41 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer components {
-  .toolsBarBtn {
-    @apply flex items-center justify-center w-8 h-8 rounded hover:bg-gray-200 cursor-pointer;
+  .headerBtn {
+    @apply flex items-center justify-center w-8 h-8 rounded hover:bg-gray-200 cursor-pointer  dark:hover:bg-gray-600;
   }
   .headerBtn {
-    @apply flex items-center justify-center w-8 h-8 rounded hover:bg-gray-200 cursor-pointer;
+    @apply flex items-center justify-center w-8 h-8 rounded hover:bg-gray-200 cursor-pointer  dark:hover:bg-gray-600;
   }
   .headerActionDivider {
     @apply flex gap-4 justify-around items-center rounded-md h-7;
   }
+  .toolsBarBtn {
+    @apply flex items-center justify-center w-8 h-8 rounded hover:bg-gray-200 cursor-pointer  dark:hover:bg-gray-600;
+  }
+  .borderRight {
+    @apply border-r pr-3 border-gray-300 dark:border-r dark:border-gray-600;
+  }
+  .borderBottom {
+    @apply w-full border-b border-gray-300 dark:border-gray-600;
+  }
+  .toolsbarSecDivContainer {
+    @apply flex gap-4 h-11 px-4 sm:px-4 w-full sm:w-4/5  md:w-3/4 lg:w-1/2 lg:px-0 mx-auto items-center;
+  }
+
   .dropdownContainer {
-    @apply flex flex-col  absolute bg-white  shadow-lg rounded-md px-4 py-2;
+    @apply flex flex-col  absolute bg-white  shadow-lg rounded-md px-4 py-2 dark:bg-gray-700;
   }
   .dropdownContent {
-    @apply flex flex-col mt-2 hover:bg-gray-200 cursor-pointer rounded-md px-2 py-1;
+    @apply flex flex-col mt-2 hover:bg-gray-200 cursor-pointer rounded-md px-2 py-1 dark:hover:bg-gray-600;
+  }
+  .textAreaStyle {
+    @apply mt-2 w-full h-96 sm:w-4/5 md:w-3/4 lg:w-1/2 block p-2.5  text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500  resize-none outline-none dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white;
+  }
+
+  .footerStyle {
+    @apply flex mt-4 gap-4 justify-center items-center text-gray-500;
   }
 }

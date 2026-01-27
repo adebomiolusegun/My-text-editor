@@ -1,34 +1,33 @@
-import { useDropDownStore } from "@store/DropDownStore";
+import { useDropDownHandler } from "@utilities/useDropDownHandler";
+import { CiCircleList } from "react-icons/ci";
+import { FaListOl, FaListUl } from "react-icons/fa";
 import {
   MdFormatListBulletedAdd,
   MdOutlineKeyboardArrowDown,
   MdOutlineKeyboardArrowUp,
 } from "react-icons/md";
-import { PiListBulletsLight } from "react-icons/pi";
+// import { PiListBulletsLight } from "react-icons/pi";
 import type { TextFormatProps } from "src/types";
 
 function BulletList({ id }: TextFormatProps) {
-  const bulletOpen = useDropDownStore((state) => state.isOpen);
-  const toggle = useDropDownStore((state) => state.toggle);
-
-  const isOpen = bulletOpen === id;
+  const { isOpen, handleDropdown } = useDropDownHandler({ id });
 
   return (
     <div>
-      <button onClick={() => toggle(id)} className="toolsBarBtn">
+      <button onClick={handleDropdown} className="toolsBarBtn">
         <MdFormatListBulletedAdd />
         {isOpen ? <MdOutlineKeyboardArrowUp /> : <MdOutlineKeyboardArrowDown />}
       </button>
       {isOpen ? (
-        <div className="dropdownContainer">
+        <div className="dropdownContainer  ">
           <button className="toolsBarBtn">
-            <PiListBulletsLight />
+            <FaListOl />
           </button>
           <button className="toolsBarBtn">
-            <PiListBulletsLight />
+            <FaListUl />
           </button>
           <button className="toolsBarBtn">
-            <PiListBulletsLight />
+            <CiCircleList />
           </button>
         </div>
       ) : null}

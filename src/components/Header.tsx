@@ -5,11 +5,11 @@ import Logo from "@UI/headerComponents/Logo";
 
 function Header() {
   return (
-    <div className="w-full border-b border-gray-300">
+    <div className="w-full borderBottom  ">
       <div className="flex justify-between items-center  h-11 w-screen  px-4">
         <Logo />
         <DocumentTitle />
-        <HeaderActions id="themeToggle" />
+        <HeaderActions />
       </div>
     </div>
   );

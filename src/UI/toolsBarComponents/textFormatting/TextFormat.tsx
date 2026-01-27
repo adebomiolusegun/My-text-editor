@@ -12,19 +12,15 @@ import { LuUnderline } from "react-icons/lu";
 import { GoStrikethrough } from "react-icons/go";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { MdOutlineKeyboardArrowUp } from "react-icons/md";
-import { useDropDownStore } from "@store/DropDownStore";
+import { useDropDownHandler } from "@utilities/useDropDownHandler";
 import type { TextFormatProps } from "src/types";
 
 function TextFormat({ id }: TextFormatProps) {
-  const HeadingOpen = useDropDownStore((state) => state.isOpen);
-  const toggle = useDropDownStore((state) => state.toggle);
-
-  const isOpen = HeadingOpen === id;
-
+  const { isOpen, handleDropdown } = useDropDownHandler({ id });
   return (
-    <div className="flex">
+    <div className="flex gap-2">
       <div>
-        <button onClick={() => toggle(id)} className="toolsBarBtn">
+        <button onClick={handleDropdown} className="toolsBarBtn">
           <LuHeading1 />
           {isOpen ? (
             <MdOutlineKeyboardArrowUp />

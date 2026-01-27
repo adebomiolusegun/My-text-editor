@@ -1,12 +1,17 @@
+import { useTextAreaStore } from "@store/TextAreaStore";
+
 function Footer() {
+  const text = useTextAreaStore((state) => state.textAreaContent);
   return (
-    <div className=" flex mt-4 gap-4 justify-center items-center text-gray-500">
+    <div className="footerStyle">
       <div>
-        <p>Number of characters: 0</p>
+        <p>Number of characters: {text.length}</p>
       </div>
 
       <div>
-        <p>Number of words: 0</p>
+        <p>
+          Number of words: {text.trim().split(/\s+/).filter(Boolean).length}
+        </p>
       </div>
     </div>
   );

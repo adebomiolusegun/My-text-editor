@@ -1,13 +1,31 @@
+import { useTextAreaStore } from "@store/TextAreaStore";
+
 function TextArea() {
+  const text = useTextAreaStore((state) => state.textAreaContent);
+  const setText = useTextAreaStore((state) => state.setTextAreaContent);
+
+  const maxLength = 1000;
+
+  function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+    const value = e.target.value;
+    // setText(value.length <= maxLength ? e.target.value : text);
+    if (value.length <= maxLength) {
+      setText(value);
+    }
+  }
   return (
-    <div className="flex flex-col justify-center items-center">
-      <textarea
-        name=""
-        id="message"
-        placeholder="Write your text here..."
-        className="mt-2 w-full h-screen sm:w-4/5 md:w-3/4 lg:w-1/2 block p-2.5 s text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 resize-none"
-      ></textarea>
-    </div>
+    <>
+      <div className="flex flex-col justify-center items-center">
+        <textarea
+          value={text}
+          onChange={handleChange}
+          name=""
+          id="message"
+          placeholder="Write your text here..."
+          className="textAreaStyle"
+        ></textarea>
+      </div>
+    </>
   );
 }
 

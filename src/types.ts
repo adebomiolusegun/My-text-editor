@@ -11,3 +11,8 @@ export interface TextAreaState {
   textAreaContent: string;
   setTextAreaContent: (content: string) => void;
 }
+
+export interface DarkModeState {
+  isDarkMode: boolean;
+  toggleDarkMode: () => void;
+}
