@@ -22,9 +22,8 @@
     @apply w-full border-b border-gray-300 dark:border-gray-600;
   }
   .toolsbarSecDivContainer {
-    @apply flex gap-4 h-11 px-4 sm:px-4 w-full sm:w-4/5  md:w-3/4 lg:w-1/2 lg:px-0 mx-auto items-center;
+    @apply flex gap-4 h-11 px-4 scroll-m-2 sm:px-4 w-full sm:w-4/5  md:w-3/4 lg:w-1/2 lg:px-0 mx-auto items-center overflow-x-auto whitespace-nowrap sm:overflow-visible;
   }
-
   .dropdownContainer {
     @apply flex flex-col  absolute bg-white  shadow-lg rounded-md px-4 py-2 dark:bg-gray-700;
   }
