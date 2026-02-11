@@ -2,36 +2,58 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+@theme {
+  --color-bg-color: #ffffff;
+  --color-textarea-border: #6a7282;
+  --color-placeholder: #9ca3af;
+  --color-bg-hover: #e5e7eb;
+  --color-drop-down: #ffffff;
+  --color-border-line: #d1d5dc;
+  --color-text-color: #111827;
+}
+
+.dark {
+  --color-bg-color: #1f2937;
+  --color-bg-hover: #4a5565;
+  --color-placeholder: #9ca3af;
+  --color-drop-down: #364153;
+  --color-border-line: #4a5565;
+  --color-textarea-border: #6a7282;
+  --color-text-color: #ffffff;
+}
+body {
+  background-color: var(--color-bg-color);
+  color: var(--color-text-color);
+}
+
 @layer components {
   .headerBtn {
-    @apply flex items-center justify-center w-8 h-8 rounded hover:bg-gray-200 cursor-pointer  dark:hover:bg-gray-600;
+    @apply flex items-center justify-center w-8 h-8 rounded hover:bg-bg-hover cursor-pointer;
   }
-  .headerBtn {
-    @apply flex items-center justify-center w-8 h-8 rounded hover:bg-gray-200 cursor-pointer  dark:hover:bg-gray-600;
-  }
+
   .headerActionDivider {
     @apply flex gap-4 justify-around items-center rounded-md h-7;
   }
   .toolsBarBtn {
-    @apply flex items-center justify-center w-8 h-8 rounded hover:bg-gray-200 cursor-pointer  dark:hover:bg-gray-600;
+    @apply flex items-center justify-center w-8 h-8 rounded hover:bg-bg-hover cursor-pointer;
   }
   .borderRight {
-    @apply border-r pr-3 border-gray-300 dark:border-r dark:border-gray-600;
+    @apply border-r pr-3 border-border-line;
   }
   .borderBottom {
-    @apply w-full border-b border-gray-300 dark:border-gray-600;
+    @apply w-full border-b border-border-line;
   }
   .toolsbarSecDivContainer {
-    @apply flex gap-4 h-11 px-4 scroll-m-2 sm:px-4 w-full sm:w-4/5  md:w-3/4 lg:w-1/2 lg:px-0 mx-auto items-center overflow-x-auto whitespace-nowrap sm:overflow-visible;
+    @apply flex gap-4 h-11 px-4 scroll-m-2 mx-auto items-center overflow-x-auto whitespace-nowrap sm:overflow-visible sm:px-4 w-full sm:w-4/5  md:w-3/4 lg:w-1/2 lg:px-0;
   }
   .dropdownContainer {
-    @apply flex flex-col  absolute bg-white  shadow-lg rounded-md px-4 py-2 dark:bg-gray-700;
+    @apply flex flex-col  absolute bg-drop-down  shadow-lg rounded-md px-4 py-2;
   }
   .dropdownContent {
-    @apply flex flex-col mt-2 hover:bg-gray-200 cursor-pointer rounded-md px-2 py-1 dark:hover:bg-gray-600;
+    @apply flex flex-col mt-2 hover:bg-bg-hover cursor-pointer rounded-md px-2 py-1;
   }
   .textAreaStyle {
-    @apply mt-2 w-full h-96 sm:w-4/5 md:w-3/4 lg:w-1/2 block p-2.5  text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500  resize-none outline-none dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white;
+    @apply mt-2 w-full h-96 sm:w-4/5 md:w-3/4 lg:w-1/2 block p-2.5  text-sm   rounded-lg border  focus:ring-blue-500  resize-none outline-none bg-bg-color border-border-line placeholder-placeholder text-text-color;
   }
 
   .footerStyle {
