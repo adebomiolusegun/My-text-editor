@@ -14,8 +14,9 @@ import {
   MdOutlineKeyboardArrowUp,
 } from "react-icons/md";
 import { useDropDownHandler } from "@utilities/useDropDownHandler";
-import type { DropDownItem, TextFormatProps } from "src/types";
+
 import { OptionDropDownStore } from "@store/OptionDropDown";
+import type { DropDownItem, TextFormatProps } from "../../../types";
 
 const headingOptions: DropDownItem[] = [
   { id: "h1", Icon: LuHeading1 },

@@ -17,16 +17,15 @@
     "jsx": "react-jsx",
 
     /* Path aliases */
-    "baseUrl": ".",
     "paths": {
-      "@components/*": ["src/components/*"],
-      "@features/*": ["src/features/*"],
-      "@UI/*": ["src/UI/*"],
-      "@store/*": ["src/store/*"],
-      "@utils/*": ["src/utils/*"],
-      "@hooks/*": ["src/hooks/*"],
-      "@styles/*": ["src/styles/*"],
-      "@utilities/*": ["src/utilities/*"]
+      "@components/*": ["./src/components/*"],
+      "@features/*": ["./src/features/*"],
+      "@UI/*": ["./src/UI/*"],
+      "@store/*": ["./src/store/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@styles/*": ["./src/styles/*"],
+      "@utilities/*": ["./src/utilities/*"]
     },
     /* Linting */
     "strict": true,

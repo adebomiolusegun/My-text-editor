@@ -1,6 +1,6 @@
 import { useDropDownStore } from "@store/DropDownStore";
 import { useEffect } from "react";
-import type { TextFormatProps } from "src/types";
+import type { TextFormatProps } from "../types";
 
 export const useDropDownHandler = ({ id }: TextFormatProps) => {
   const headingOpen = useDropDownStore((state) => state.isOpen);
