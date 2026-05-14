@@ -14,22 +14,22 @@ import {
   MdOutlineKeyboardArrowUp,
 } from "react-icons/md";
 import { useDropDownHandler } from "@utilities/useDropDownHandler";
-import type { DropDownItem, TextFormatProps } from "src/types";
-import { OptionDropDownStore } from "@store/OptionDropDown";
 
+import { OptionDropDownStore } from "@store/OptionDropDown";
+import type { DropDownItem, TextFormatProps } from "../../../types";
 const headingOptions: DropDownItem[] = [
-  { id: "h1", Icon: LuHeading1 },
-  { id: "h2", Icon: LuHeading2 },
-  { id: "h3", Icon: LuHeading3 },
-  { id: "h4", Icon: LuHeading4 },
-  { id: "h5", Icon: LuHeading5 },
-  { id: "h6", Icon: LuHeading6 },
+  { id: "h1", label: "Heading 1", Icon: LuHeading1 },
+  { id: "h2", label: "Heading 2", Icon: LuHeading2 },
+  { id: "h3", label: "Heading 3", Icon: LuHeading3 },
+  { id: "h4", label: "Heading 4", Icon: LuHeading4 },
+  { id: "h5", label: "Heading 5", Icon: LuHeading5 },
+  { id: "h6", label: "Heading 6", Icon: LuHeading6 },
 ];
 
 function TextFormat({ id }: TextFormatProps) {
   const { isOpen, handleDropdown } = useDropDownHandler({ id });
   const SelectOption = OptionDropDownStore(
-    (state) => state.selectOption[id] ?? LuHeading1,
+    (state) => state.selectOption[id] ?? headingOptions[0],
   );
   const setOptions = OptionDropDownStore((state) => state.setOption);
 

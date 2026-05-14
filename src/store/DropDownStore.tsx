@@ -1,5 +1,5 @@
-import type { DropDownState } from "src/types";
 import { create } from "zustand";
+import type { DropDownState } from "../types";
 
 export const useDropDownStore = create<DropDownState>((set) => ({
   isOpen: null,

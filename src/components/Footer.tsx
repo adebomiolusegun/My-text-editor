@@ -1,16 +1,18 @@
-import { useTextAreaStore } from "@store/TextAreaStore";
+import { useRedoUndoStore } from "@store/RedoUndoStore";
 
 function Footer() {
-  const text = useTextAreaStore((state) => state.textAreaContent);
+  // const text = useTextAreaStore((state) => state.textAreaContent);
+  const { current } = useRedoUndoStore();
   return (
     <div className="footerStyle">
       <div>
-        <p>Number of characters: {text.length}</p>
+        <p>Number of characters: {current.length}</p>
       </div>
 
       <div>
         <p>
-          Number of words: {text.trim().split(/\s+/).filter(Boolean).length}
+          Number of words:
+          {current.trim().split(/\s+/).filter(Boolean).length}
         </p>
       </div>
     </div>

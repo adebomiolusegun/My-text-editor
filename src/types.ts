@@ -22,9 +22,21 @@ export interface DarkModeState {
 export type DropDownItem = {
   id: string;
   Icon: IconType;
+  label: string;
 };
 
 export interface DropDownOption {
   selectOption: Record<string, IconType>;
   setOption: (id: string, icon: IconType) => void;
+}
+
+export interface RedoUndoState {
+  undo: string[];
+  current: string;
+  redo: string[];
+
+  setCurrent: (state: string) => void;
+  setUndo: () => void;
+  setRedo: () => void;
+  clear: () => void;
 }

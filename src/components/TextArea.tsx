@@ -1,16 +1,15 @@
-import { useTextAreaStore } from "@store/TextAreaStore";
+import { useRedoUndoStore } from "@store/RedoUndoStore";
 
 function TextArea() {
-  const text = useTextAreaStore((state) => state.textAreaContent);
-  const setText = useTextAreaStore((state) => state.setTextAreaContent);
+  const { current, setCurrent } = useRedoUndoStore();
 
   const maxLength = 1000;
 
   function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     const value = e.target.value;
-    // setText(value.length <= maxLength ? e.target.value : text);
+
     if (value.length <= maxLength) {
-      setText(value);
+      setCurrent(value);
     }
   }
 
@@ -18,10 +17,12 @@ function TextArea() {
     <>
       <div className="flex flex-col justify-center items-center">
         <textarea
-          value={text}
+          value={current}
           onChange={handleChange}
           name=""
           id="message"
+          contentEditable
+          suppressContentEditableWarning
           placeholder="Write your text here..."
           className="textAreaStyle"
         ></textarea>

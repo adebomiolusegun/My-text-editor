@@ -1,22 +1,20 @@
-import { useTextAreaStore } from "@store/TextAreaStore";
+import { useRedoUndoStore } from "@store/RedoUndoStore";
 import { LuUndo } from "react-icons/lu";
 import { LuRedo } from "react-icons/lu";
 import { MdClear } from "react-icons/md";
 
 function Redo() {
-  const setText = useTextAreaStore((state) => state.setTextAreaContent);
-  function handleClear() {
-    setText("");
-  }
+  const { setUndo, setRedo, clear } = useRedoUndoStore();
+
   return (
     <div className="flex gap-2">
-      <button className="toolsBarBtn">
+      <button className="toolsBarBtn" onClick={setRedo}>
         <LuRedo />
       </button>
-      <button className="toolsBarBtn">
+      <button className="toolsBarBtn" onClick={setUndo}>
         <LuUndo />
       </button>
-      <button onClick={handleClear} className="toolsBarBtn">
+      <button className="toolsBarBtn" onClick={clear}>
         <MdClear />
       </button>
     </div>

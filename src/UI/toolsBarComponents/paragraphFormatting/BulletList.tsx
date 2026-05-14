@@ -9,8 +9,8 @@ import {
   MdOutlineKeyboardArrowDown,
   MdOutlineKeyboardArrowUp,
 } from "react-icons/md";
+import type { DropDownItem, TextFormatProps } from "../../../types";
 // import { PiListBulletsLight } from "react-icons/pi";
-import type { DropDownItem, TextFormatProps } from "src/types";
 
 const bulletOptions: DropDownItem[] = [
   { id: "list1", Icon: FaListOl },

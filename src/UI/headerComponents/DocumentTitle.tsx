@@ -1,6 +1,10 @@
+// type DocumentTitleProps = {
+//   heading?: string;
+// };
+
 function DocumentTitle() {
   return (
-    <div className="flex justify-center text-xs lg:text-lg">Document Title</div>
+    <div className="flex justify-center text-xs lg:text-lg">DocumentTitle</div>
   );
 }
 
