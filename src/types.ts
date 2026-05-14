@@ -28,3 +28,14 @@ export interface DropDownOption {
   selectOption: Record<string, IconType>;
   setOption: (id: string, icon: IconType) => void;
 }
+
+export interface RedoUndoState {
+  undo: string[];
+  current: string;
+  redo: string[];
+
+  setCurrent: (value: string) => void;
+  undoAction: () => void;
+  redoAction: () => void;
+  clear: () => void;
+}
