@@ -1,6 +1,7 @@
 // import { LuHeading1 } from "react-icons/lu";
-import type { DropDownOption } from "src/types";
+
 import { create } from "zustand";
+import type { DropDownOption } from "../types";
 
 export const OptionDropDownStore = create<DropDownOption>((set) => ({
   selectOption: {},
