@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+// import { LuHeading1 } from "react-icons/lu";
+
+>>>>>>> text-editing
 import { create } from "zustand";
 import type { DropDownOption } from "../types";
 

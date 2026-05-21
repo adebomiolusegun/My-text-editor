@@ -14,6 +14,12 @@ import {
   MdOutlineKeyboardArrowUp,
 } from "react-icons/md";
 import { useDropDownHandler } from "@utilities/useDropDownHandler";
+<<<<<<< HEAD
+=======
+
+import { OptionDropDownStore } from "@store/OptionDropDown";
+import type { DropDownItem, TextFormatProps } from "../../../types";
+>>>>>>> text-editing
 
 import { OptionDropDownStore } from "@store/OptionDropDown";
 import type { DropDownItem, TextFormatProps } from "../../../types";

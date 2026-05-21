@@ -1,6 +1,6 @@
 import Footer from "@components/Footer";
 import Header from "@components/Header";
-import TextArea from "@components/TextArea";
+import Editor from "@hooks/BlockComponent";
 import ToolsBar from "@components/ToolsBar";
 
 function Home() {
@@ -8,7 +8,7 @@ function Home() {
     <div className="h-screen w-screen flex flex-col ">
       <Header />
       <ToolsBar />
-      <TextArea />
+      <Editor />
       <Footer />
     </div>
   );
