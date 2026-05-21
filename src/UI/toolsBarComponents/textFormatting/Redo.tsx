@@ -16,7 +16,7 @@ function Redo() {
       <button className="toolsBarBtn">
         <LuUndo />
       </button>
-      <button className="toolsBarBtn" onClick={clear}>
+      <button className="toolsBarBtn" onClick={handleClear}>
         <MdClear />
       </button>
     </div>

@@ -14,15 +14,10 @@ import {
   MdOutlineKeyboardArrowUp,
 } from "react-icons/md";
 import { useDropDownHandler } from "@utilities/useDropDownHandler";
-<<<<<<< HEAD
-=======
 
 import { OptionDropDownStore } from "@store/OptionDropDown";
 import type { DropDownItem, TextFormatProps } from "../../../types";
->>>>>>> text-editing
 
-import { OptionDropDownStore } from "@store/OptionDropDown";
-import type { DropDownItem, TextFormatProps } from "../../../types";
 const headingOptions: DropDownItem[] = [
   { id: "h1", label: "Heading 1", Icon: LuHeading1 },
   { id: "h2", label: "Heading 2", Icon: LuHeading2 },

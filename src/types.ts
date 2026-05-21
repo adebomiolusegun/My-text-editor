@@ -36,13 +36,6 @@ export interface RedoUndoState {
   current: string;
   redo: string[];
 
-<<<<<<< HEAD
-  setCurrent: (state: string) => void;
-  setUndo: () => void;
-  setRedo: () => void;
-  clear: () => void;
-}
-=======
   setCurrent: (value: string) => void;
   undoAction: () => void;
   redoAction: () => void;
@@ -65,4 +58,3 @@ export type EditorStore = {
   addBlockAfter: (id: string) => void;
   deleteBlock: (id: string) => void;
 };
->>>>>>> text-editing

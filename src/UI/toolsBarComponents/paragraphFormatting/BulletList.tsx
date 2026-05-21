@@ -13,9 +13,9 @@ import type { DropDownItem, TextFormatProps } from "../../../types";
 // import { PiListBulletsLight } from "react-icons/pi";
 
 const bulletOptions: DropDownItem[] = [
-  { id: "list1", Icon: FaListOl },
-  { id: "list1", Icon: FaListUl },
-  { id: "list1", Icon: CiCircleList },
+  { id: "list-ol", label: "Numbered list", Icon: FaListOl },
+  { id: "list-ul", label: "Bulleted list", Icon: FaListUl },
+  { id: "list-circle", label: "Circle list", Icon: CiCircleList },
 ];
 
 function BulletList({ id }: TextFormatProps) {
@@ -50,7 +50,5 @@ function BulletList({ id }: TextFormatProps) {
     </div>
   );
 }
-
-<BulletList id="bulletList" />;
 
 export default BulletList;
