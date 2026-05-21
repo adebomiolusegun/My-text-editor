@@ -1,5 +1,6 @@
 import type { IconType } from "react-icons";
 
+export type BlockTag = "p" | "h1" | "h2" | "h3";
 export interface DropDownState {
   isOpen: string | null;
   toggle: (id: string) => void;
@@ -39,3 +40,20 @@ export interface RedoUndoState {
   redoAction: () => void;
   clear: () => void;
 }
+
+export type Block = {
+  id: string;
+  tag: BlockTag;
+  content: string;
+};
+
+export type EditorStore = {
+  blocks: Block[];
+  activeBlockId: string | null;
+
+  setActiveBlock: (id: string) => void;
+  updateContent: (id: string, content: string) => void;
+  changeTag: (id: string, tag: BlockTag) => void;
+  addBlockAfter: (id: string) => void;
+  deleteBlock: (id: string) => void;
+};

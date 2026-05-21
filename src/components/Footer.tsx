@@ -1,7 +1,5 @@
-import { useRedoUndoStore } from "@store/RedoUndoStore";
-
 function Footer() {
-  const { current } = useRedoUndoStore();
+  const current = document.getElementById("editor")?.innerText || "";
   return (
     <div className="footerStyle">
       <div>

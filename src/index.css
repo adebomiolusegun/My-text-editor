@@ -52,10 +52,25 @@ body {
   .dropdownContent {
     @apply flex flex-col mt-2 hover:bg-bg-hover cursor-pointer rounded-md px-2 py-1;
   }
-  .textAreaStyle {
-    @apply mt-2 w-full h-96 sm:w-4/5 md:w-3/4 lg:w-1/2 block p-2.5  text-sm   rounded-lg border  focus:ring-blue-500  resize-none outline-none bg-bg-color border-border-line placeholder-placeholder text-text-color;
+  /* .editorContainer {
+    @apply mt-2 min-h-96
+  w-full
+  sm:w-4/5
+  md:w-3/4
+  lg:w-1/2
+  p-4
+  rounded-lg
+  border
+  bg-bg-color
+  border-border-line
+  text-text-color
+  focus-within:ring-2
+  focus-within:ring-blue-500;
+  } */
+  .blockStyle {
+    @apply outline-none w-full min-h-[400px] py-2 px-2 break-words rounded-md border border-border-line
+  bg-bg-color;
   }
-
   .footerStyle {
     @apply flex mt-4 gap-4 justify-center items-center text-gray-500;
   }
