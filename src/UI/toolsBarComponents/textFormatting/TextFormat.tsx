@@ -30,7 +30,7 @@ const headingOptions: DropDownItem[] = [
 function TextFormat({ id }: TextFormatProps) {
   const { isOpen, handleDropdown } = useDropDownHandler({ id });
   const SelectOption = OptionDropDownStore(
-    (state) => state.selectOption[id] ?? headingOptions[0],
+    (state) => state.selectOption[id] ?? headingOptions[0].Icon,
   );
   const setOptions = OptionDropDownStore((state) => state.setOption);
 
