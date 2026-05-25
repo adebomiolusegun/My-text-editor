@@ -12,7 +12,7 @@ function TextArea({ block }: { block: Block }) {
     if (ref.current && ref.current.innerHTML !== block.content) {
       ref.current.innerHTML = block.content;
     }
-  }, []);
+  }, [block.content]);
 
   if (!block) return null;
 
