@@ -55,6 +55,8 @@ function formatSelection(
   // Place caret after the NBSP.
   setCaret(anchorText, anchorText.length);
 
+  anchor.remove();
+
   onUpdate?.(editableElement.innerHTML);
 }
 
