@@ -27,6 +27,19 @@ body {
 }
 
 @layer components {
+  .fmt-bold {
+    font-weight: 700;
+  }
+  .fmt-italic {
+    font-style: italic;
+  }
+  .fmt-underline {
+    text-decoration: underline;
+  }
+  .fmt-strike {
+    text-decoration: line-through;
+  }
+
   .headerBtn {
     @apply flex items-center justify-center w-8 h-8 rounded hover:bg-bg-hover cursor-pointer;
   }
@@ -47,7 +60,7 @@ body {
     @apply flex gap-4 h-11 px-4 scroll-m-2 mx-auto items-center overflow-x-auto whitespace-nowrap sm:overflow-visible sm:px-4 w-full sm:w-4/5  md:w-3/4 lg:w-1/2 lg:px-0;
   }
   .dropdownContainer {
-    @apply flex flex-col  absolute bg-drop-down  shadow-lg rounded-md px-4 py-2;
+    @apply z-50 flex flex-col absolute bg-drop-down shadow-lg rounded-md px-4 py-2;
   }
   .dropdownContent {
     @apply flex flex-col mt-2 hover:bg-bg-hover cursor-pointer rounded-md px-2 py-1;
@@ -68,8 +81,18 @@ body {
   focus-within:ring-blue-500;
   } */
   .blockStyle {
-    @apply outline-none w-full min-h-[400px] py-2 px-2 break-words rounded-md border border-border-line
+    @apply outline-none w-full min-h-100 py-2 px-2 wrap-break-word rounded-md border border-border-line
   bg-bg-color;
+    position: relative;
+  }
+
+  .blockStyle:empty:before {
+    content: attr(data-placeholder);
+    color: var(--color-placeholder);
+    pointer-events: none;
+    position: absolute;
+    left: 0.5rem;
+    top: 0.5rem;
   }
   .footerStyle {
     @apply flex mt-4 gap-4 justify-center items-center text-gray-500;

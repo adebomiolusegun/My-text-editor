@@ -1,9 +1,10 @@
 import { FaRegSave } from "react-icons/fa";
-import Profile from "./Profile";
 import { CiSun } from "react-icons/ci";
 import { LuMoonStar } from "react-icons/lu";
-import { useDarkModeStore } from "@store/DarkModeStore";
 import { useEffect } from "react";
+
+import Profile from "./Profile";
+import { useDarkModeStore } from "@store/DarkModeStore/DarkModeStore";
 
 // import { LuUndo } from "react-icons/lu";
 // import { LuRedo } from "react-icons/lu";
@@ -18,7 +19,7 @@ function HeaderActions() {
 
   return (
     <div className="flex w-auto gap-4 justify-around items-center rounded-md h-7">
-      <div className=" headerActionDivider">
+      <div className="headerActionDivider">
         <div className=" flex borderRight ">
           <button className="headerBtn">
             <FaRegSave className="" />

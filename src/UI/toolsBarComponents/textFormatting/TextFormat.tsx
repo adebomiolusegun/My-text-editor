@@ -6,43 +6,57 @@ import {
   LuHeading5,
   LuHeading6,
 } from "react-icons/lu";
+
 import { FaBold } from "react-icons/fa6";
 import { GoItalic, GoStrikethrough } from "react-icons/go";
 import { LuUnderline } from "react-icons/lu";
+
 import {
   MdOutlineKeyboardArrowDown,
   MdOutlineKeyboardArrowUp,
 } from "react-icons/md";
-import { useDropDownHandler } from "@utilities/useDropDownHandler";
-<<<<<<< HEAD
-=======
 
-import { OptionDropDownStore } from "@store/OptionDropDown";
-import type { DropDownItem, TextFormatProps } from "../../../types";
->>>>>>> text-editing
+import formatSelection from "@utilities/formatSelection";
+import useDropDownHandler from "@utilities/useDropDownHandler";
 
-import { OptionDropDownStore } from "@store/OptionDropDown";
-import type { DropDownItem, TextFormatProps } from "../../../types";
-const headingOptions: DropDownItem[] = [
-  { id: "h1", label: "Heading 1", Icon: LuHeading1 },
-  { id: "h2", label: "Heading 2", Icon: LuHeading2 },
-  { id: "h3", label: "Heading 3", Icon: LuHeading3 },
-  { id: "h4", label: "Heading 4", Icon: LuHeading4 },
-  { id: "h5", label: "Heading 5", Icon: LuHeading5 },
-  { id: "h6", label: "Heading 6", Icon: LuHeading6 },
+import { OptionDropDownStore } from "@store/OptionDropDown/OptionDropDown";
+import useEditorStore from "@store/TextEditorStore";
+
+import type { DropDownItem, TextFormatProps } from "../../../Types/types";
+
+const headingOptions: Array<DropDownItem & { tag: string }> = [
+  { id: "h1", label: "Heading 1", Icon: LuHeading1, tag: "h1" },
+  { id: "h2", label: "Heading 2", Icon: LuHeading2, tag: "h2" },
+  { id: "h3", label: "Heading 3", Icon: LuHeading3, tag: "h3" },
+  { id: "h4", label: "Heading 4", Icon: LuHeading4, tag: "h4" },
+  { id: "h5", label: "Heading 5", Icon: LuHeading5, tag: "h5" },
+  { id: "h6", label: "Heading 6", Icon: LuHeading6, tag: "h6" },
 ];
 
 function TextFormat({ id }: TextFormatProps) {
+  const { activeBlockId, updateContent, changeTag } = useEditorStore();
   const { isOpen, handleDropdown } = useDropDownHandler({ id });
+
   const SelectOption = OptionDropDownStore(
-    (state) => state.selectOption[id] ?? headingOptions[0],
+    (state) => state.selectOption[id] ?? headingOptions[0].Icon,
   );
+
   const setOptions = OptionDropDownStore((state) => state.setOption);
+
+  // shared updater
+  const handleUpdate = (content: string) => {
+    if (activeBlockId) updateContent(activeBlockId, content);
+  };
 
   return (
     <div className="flex gap-2">
+      {/* HEADINGS (BLOCK LEVEL) */}
       <div className="relative">
-        <button onClick={(e) => handleDropdown(e)} className="toolsBarBtn">
+        <button
+          type="button"
+          onClick={(e) => handleDropdown(e)}
+          className="toolsBarBtn"
+        >
           <SelectOption />
           {isOpen ? (
             <MdOutlineKeyboardArrowUp />
@@ -53,33 +67,80 @@ function TextFormat({ id }: TextFormatProps) {
 
         {isOpen && (
           <div className="dropdownContainer">
-            {headingOptions.map(({ id: optionId, Icon }) => (
-              <div
+            {headingOptions.map(({ id: optionId, Icon, tag }) => (
+              <button
                 key={optionId}
-                className="dropdownContent cursor-pointer"
-                onClick={(e) => {
+                type="button"
+                className="dropdownContent"
+                onMouseDown={(e) => {
+                  e.preventDefault();
                   e.stopPropagation();
+
                   setOptions(id, Icon);
+
+                  if (activeBlockId) {
+                    changeTag(activeBlockId, tag); // 🔥 FULL BLOCK CHANGE
+                  }
+
                   handleDropdown(e);
                 }}
               >
                 <Icon />
-              </div>
+              </button>
             ))}
           </div>
         )}
       </div>
 
-      <button className="toolsBarBtn">
+      {/* BOLD */}
+      <button
+        type="button"
+        className="toolsBarBtn"
+        onMouseDown={(e) => {
+          e.preventDefault();
+
+          formatSelection("fmt-bold", handleUpdate);
+        }}
+      >
         <FaBold />
       </button>
-      <button className="toolsBarBtn">
+
+      {/* ITALIC */}
+      <button
+        type="button"
+        className="toolsBarBtn"
+        onMouseDown={(e) => {
+          e.preventDefault();
+
+          formatSelection("fmt-italic", handleUpdate);
+        }}
+      >
         <GoItalic />
       </button>
-      <button className="toolsBarBtn">
+
+      {/* UNDERLINE */}
+      <button
+        type="button"
+        className="toolsBarBtn"
+        onMouseDown={(e) => {
+          e.preventDefault();
+
+          formatSelection("fmt-underline", handleUpdate);
+        }}
+      >
         <LuUnderline />
       </button>
-      <button className="toolsBarBtn">
+
+      {/* STRIKE */}
+      <button
+        type="button"
+        className="toolsBarBtn"
+        onMouseDown={(e) => {
+          e.preventDefault();
+
+          formatSelection("fmt-strike", handleUpdate);
+        }}
+      >
         <GoStrikethrough />
       </button>
     </div>

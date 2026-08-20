@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { DarkModeState } from "../types";
+import type { DarkModeState } from "../../Types/types";
 
 export const useDarkModeStore = create<DarkModeState>((set) => ({
   isDarkMode: false,

@@ -1,8 +1,8 @@
-import { useDropDownStore } from "@store/DropDownStore";
+import { useDropDownStore } from "@store/DropDownStore/DropDownStore";
 import { useEffect } from "react";
-import type { TextFormatProps } from "../types";
+import type { TextFormatProps } from "../Types/types";
 
-export const useDropDownHandler = ({ id }: TextFormatProps) => {
+const useDropDownHandler = ({ id }: TextFormatProps) => {
   const { isOpen: headingOpen, toggle } = useDropDownStore();
 
   const isOpen = headingOpen === id;
@@ -28,3 +28,5 @@ export const useDropDownHandler = ({ id }: TextFormatProps) => {
 
   return { isOpen, handleDropdown };
 };
+
+export default useDropDownHandler;
