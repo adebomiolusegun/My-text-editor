@@ -1,7 +1,8 @@
 // components/Editor.tsx
 
-import TextArea from "@components/TextArea";
-import { useEditorStore } from "@store/TextEditorStore";
+import { useEditorStore } from "@store/TextEditorStore/TextEditorStore";
+
+import TextArea from "@components/TextArea/TextArea";
 
 function Editor() {
   const blocks = useEditorStore((s) => s.blocks);
@@ -11,7 +12,9 @@ function Editor() {
       <div className=" w-full flex flex-col gap-2 rounded-md p-4">
         {blocks?.length > 0 &&
           blocks.map((block) =>
-            block ? <TextArea key={block.id} block={block} /> : null,
+            block ? (
+              <TextArea key={`${block.id}-${block.tag}`} block={block} />
+            ) : null,
           )}
       </div>
     </div>

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { DropDownOption } from "../types";
+import type { DropDownOption } from "../../Types/types";
 
 export const OptionDropDownStore = create<DropDownOption>((set) => ({
   selectOption: {},

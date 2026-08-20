@@ -1,7 +1,7 @@
-import Footer from "@components/Footer";
-import Header from "@components/Header";
-import Editor from "@hooks/BlockComponent";
-import ToolsBar from "@components/ToolsBar";
+import Footer from "@components/Footer/Footer";
+import Header from "@components/Header/Header";
+import Editor from "@UI/BlockComponent";
+import ToolsBar from "@components/ToolsBar/ToolsBar";
 
 function Home() {
   return (

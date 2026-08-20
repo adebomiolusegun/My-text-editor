@@ -1,5 +1,3 @@
-import { OptionDropDownStore } from "@store/OptionDropDown";
-import { useDropDownHandler } from "@utilities/useDropDownHandler";
 // import { useState } from "react";
 // import type { IconType } from "react-icons";
 import { CiCircleList } from "react-icons/ci";
@@ -9,7 +7,11 @@ import {
   MdOutlineKeyboardArrowDown,
   MdOutlineKeyboardArrowUp,
 } from "react-icons/md";
-import type { DropDownItem, TextFormatProps } from "../../../types";
+import type { DropDownItem, TextFormatProps } from "../../../Types/types";
+
+import { OptionDropDownStore } from "@store/OptionDropDown/OptionDropDown";
+import useDropDownHandler from "@utilities/useDropDownHandler";
+
 // import { PiListBulletsLight } from "react-icons/pi";
 
 const bulletOptions: DropDownItem[] = [

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { RedoUndoState } from "../types";
+import type { RedoUndoState } from "../../Types/types";
 
 export const useRedoUndoStore = create<RedoUndoState>((set, get) => ({
   undo: [],

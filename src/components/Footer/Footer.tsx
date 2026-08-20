@@ -1,4 +1,4 @@
-import { useRedoUndoStore } from "@store/RedoUndoStore";
+import { useRedoUndoStore } from "@store/RedoUndoStore/RedoUndoStore";
 
 function Footer() {
   const { current } = useRedoUndoStore();
