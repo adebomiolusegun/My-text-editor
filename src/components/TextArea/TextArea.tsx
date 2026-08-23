@@ -1,7 +1,11 @@
 import { useEditorStore } from "@store/TextEditorStore/TextEditorStore";
+
 import { useEffect, useRef, type ElementType, type KeyboardEvent } from "react";
 
 import type { Block } from "../../Types/types";
+
+import { saveEditorSnapshot } from "@utilities/saveEditorSnapshot";
+
 import { setCaret } from "@utilities/caret";
 
 const headingStyles: Record<string, string> = {
@@ -21,12 +25,6 @@ function TextArea({ block }: { block: Block }) {
 
   const { setActiveBlock, updateContent, addBlockAfter } = useEditorStore();
 
-  /*
-   * Sync Zustand → DOM.
-   *
-   * Don't overwrite the DOM while the user is actively editing.
-   * Doing so can destroy the caret/selection.
-   */
   useEffect(() => {
     if (!ref.current) return;
 
@@ -39,18 +37,12 @@ function TextArea({ block }: { block: Block }) {
 
   if (!block) return null;
 
-  /*
-   * DOM → Zustand
-   */
   function handleInput() {
     if (!ref.current) return;
 
     updateContent(block.id, ref.current.innerHTML);
   }
 
-  /*
-   * User enters the block.
-   */
   function handleFocus() {
     setActiveBlock(block.id);
 
@@ -61,34 +53,34 @@ function TextArea({ block }: { block: Block }) {
     }
   }
 
-  /*
-   * User leaves the block.
-   */
   function handleBlur() {
     if (!ref.current) return;
 
     const text = ref.current.innerText.trim();
 
     if (text === "") {
-      ref.current.innerHTML = PLACEHOLDER_TEXT;
-
       updateContent(block.id, PLACEHOLDER_TEXT);
+
+      ref.current.innerHTML = PLACEHOLDER_TEXT;
     }
   }
 
-  /*
-   * Keyboard behavior.
-   */
   function handleKeyDown(e: KeyboardEvent<HTMLElement>) {
     /*
      * ENTER
-     *
-     * Don't allow contentEditable to create its
-     * own paragraph. Our editor creates a new block.
      */
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
 
+      /*
+       * Save the document BEFORE
+       * creating the new block.
+       */
+      saveEditorSnapshot();
+
+      /*
+       * Create the new block.
+       */
       addBlockAfter(block.id);
 
       return;
@@ -96,11 +88,10 @@ function TextArea({ block }: { block: Block }) {
 
     /*
      * SPACE
-     *
-     * Only intervene when the caret is currently
-     * inside one of our formatting spans.
      */
-    if (e.key !== " ") return;
+    if (e.key !== " ") {
+      return;
+    }
 
     const selection = window.getSelection();
 
@@ -121,35 +112,23 @@ function TextArea({ block }: { block: Block }) {
 
     const formattedSpan = element?.closest<HTMLElement>("span[class^='fmt-']");
 
-    if (!formattedSpan) return;
+    if (!formattedSpan) {
+      return;
+    }
 
-    /*
-     * The browser would normally insert the space
-     * inside the formatted span.
-     *
-     * We don't want that.
-     */
     e.preventDefault();
 
     /*
-     * Use a NORMAL space here.
-     *
-     * NBSP is reserved for the temporary caret anchor
-     * used by formatSelection().
+     * Save BEFORE modifying DOM.
      */
+    saveEditorSnapshot();
+
     const space = document.createTextNode(" ");
 
     formattedSpan.after(space);
 
-    /*
-     * Put the caret immediately after the space.
-     */
     setCaret(space, space.length);
 
-    /*
-     * We manually changed the DOM, so synchronize
-     * it with Zustand.
-     */
     if (ref.current) {
       updateContent(block.id, ref.current.innerHTML);
     }

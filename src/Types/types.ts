@@ -35,6 +35,7 @@ export type EditorStore = {
   activeBlockId: string | null;
 
   setActiveBlock: (id: string) => void;
+  setBlocks: (blocks: Block[]) => void;
   updateContent: (id: string, content: string) => void;
   changeTag: (id: string, tag: BlockTag) => void;
   addBlockAfter: (id: string) => void;
@@ -50,12 +51,15 @@ export interface TextAreaState {
 }
 
 export interface RedoUndoState {
-  undo: string[];
-  current: string;
-  redo: string[];
+  undo: Block[][];
+  redo: Block[][];
+  current: Block[];
 
-  setCurrent: (value: string) => void;
-  undoAction: () => void;
-  redoAction: () => void;
-  clear: () => void;
+  initialize: (blocks: Block[]) => void;
+
+  setCurrent: (blocks: Block[]) => void;
+
+  undoAction: () => Block[] | null;
+
+  redoAction: () => Block[] | null;
 }
