@@ -5,7 +5,6 @@ import { useEffect, useRef, type ElementType, type KeyboardEvent } from "react";
 import type { Block } from "../../Types/types";
 
 import { saveEditorSnapshot } from "@utilities/saveEditorSnapshot";
-
 import { setCaret } from "@utilities/caret";
 
 const headingStyles: Record<string, string> = {
@@ -23,48 +22,115 @@ const PLACEHOLDER_TEXT = "Start writing...";
 function TextArea({ block }: { block: Block }) {
   const ref = useRef<HTMLElement | null>(null);
 
+  /*
+   * True when the change came from this
+   * contentEditable itself.
+   *
+   * This prevents our useEffect from
+   * replacing innerHTML while typing.
+   */
+  const isLocalChangeRef = useRef(false);
+
   const { setActiveBlock, updateContent, addBlockAfter } = useEditorStore();
 
+  /*
+   * Synchronize Zustand -> DOM.
+   *
+   * This is needed for Undo / Redo.
+   *
+   * But we MUST NOT do it when the change
+   * came from the user typing.
+   */
   useEffect(() => {
-    if (!ref.current) return;
+    if (!ref.current) {
+      return;
+    }
 
-    const isFocused = document.activeElement === ref.current;
+    if (isLocalChangeRef.current) {
+      isLocalChangeRef.current = false;
+      return;
+    }
 
-    if (!isFocused) {
+    /*
+     * This happens for Undo / Redo.
+     *
+     * Update the DOM with the restored content.
+     */
+    if (ref.current.innerHTML !== (block.content || "")) {
       ref.current.innerHTML = block.content || "";
     }
   }, [block.content]);
 
-  if (!block) return null;
+  if (!block) {
+    return null;
+  }
 
+  /*
+   * INPUT
+   */
   function handleInput() {
-    if (!ref.current) return;
+    if (!ref.current) {
+      return;
+    }
+
+    /* Save the state before each input event for character-level undo. */
+    saveEditorSnapshot();
+
+    /*
+     * Tell the effect that this update
+     * originated from the contentEditable.
+     */
+    isLocalChangeRef.current = true;
 
     updateContent(block.id, ref.current.innerHTML);
   }
 
+  /*
+   * FOCUS
+   */
   function handleFocus() {
     setActiveBlock(block.id);
 
+    /*
+     * Remove placeholder text.
+     */
     if (block.content === PLACEHOLDER_TEXT && ref.current) {
+      saveEditorSnapshot();
+
       ref.current.innerHTML = "";
+
+      isLocalChangeRef.current = true;
 
       updateContent(block.id, "");
     }
   }
 
+  /*
+   * BLUR
+   */
   function handleBlur() {
-    if (!ref.current) return;
+    if (!ref.current) {
+      return;
+    }
 
     const text = ref.current.innerText.trim();
 
     if (text === "") {
+      if (block.content !== PLACEHOLDER_TEXT) {
+        saveEditorSnapshot();
+      }
+
+      isLocalChangeRef.current = true;
+
       updateContent(block.id, PLACEHOLDER_TEXT);
 
       ref.current.innerHTML = PLACEHOLDER_TEXT;
     }
   }
 
+  /*
+   * KEYBOARD
+   */
   function handleKeyDown(e: KeyboardEvent<HTMLElement>) {
     /*
      * ENTER
@@ -73,21 +139,27 @@ function TextArea({ block }: { block: Block }) {
       e.preventDefault();
 
       /*
-       * Save the document BEFORE
-       * creating the new block.
+       * Save BEFORE creating the new block.
        */
       saveEditorSnapshot();
 
-      /*
-       * Create the new block.
-       */
       addBlockAfter(block.id);
 
       return;
     }
 
     /*
-     * SPACE
+     * BACKSPACE / DELETE
+     */
+    if (e.key === "Backspace" || e.key === "Delete") {
+      /* Save the state before each deletion for character-level undo. */
+      saveEditorSnapshot();
+
+      return;
+    }
+
+    /*
+     * SPACE AFTER FORMATTED SPAN
      */
     if (e.key !== " ") {
       return;
@@ -101,7 +173,9 @@ function TextArea({ block }: { block: Block }) {
 
     const anchorNode = selection.anchorNode;
 
-    if (!anchorNode) return;
+    if (!anchorNode) {
+      return;
+    }
 
     const element =
       anchorNode.nodeType === Node.TEXT_NODE
@@ -119,7 +193,7 @@ function TextArea({ block }: { block: Block }) {
     e.preventDefault();
 
     /*
-     * Save BEFORE modifying DOM.
+     * Save before changing the DOM.
      */
     saveEditorSnapshot();
 
@@ -127,9 +201,14 @@ function TextArea({ block }: { block: Block }) {
 
     formattedSpan.after(space);
 
+    /*
+     * Put caret after the inserted space.
+     */
     setCaret(space, space.length);
 
     if (ref.current) {
+      isLocalChangeRef.current = true;
+
       updateContent(block.id, ref.current.innerHTML);
     }
   }
@@ -142,11 +221,11 @@ function TextArea({ block }: { block: Block }) {
         ref.current = node;
       }}
       contentEditable
+      suppressContentEditableWarning
       onFocus={handleFocus}
       onBlur={handleBlur}
       onInput={handleInput}
       onKeyDown={handleKeyDown}
-      suppressContentEditableWarning
       className={`${headingStyles[block.tag]} blockStyle`}
     />
   );

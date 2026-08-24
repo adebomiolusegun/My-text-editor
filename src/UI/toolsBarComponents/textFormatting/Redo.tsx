@@ -40,10 +40,12 @@ function Redo() {
   function handleClear() {
     /*
      * Save the current document before clearing.
-     * This allows Undo to restore it.
      */
     saveEditorSnapshot();
 
+    /*
+     * Clear the document.
+     */
     setBlocks([
       {
         id: crypto.randomUUID(),
