@@ -17,6 +17,13 @@ const headingStyles: Record<string, string> = {
   p: "text-[12px] font-normal",
 };
 
+const alignmentStyles = {
+  left: "text-left",
+  center: "text-center",
+  right: "text-right",
+  justify: "text-justify",
+};
+
 const PLACEHOLDER_TEXT = "Start writing...";
 
 function TextArea({ block }: { block: Block }) {
@@ -226,7 +233,12 @@ function TextArea({ block }: { block: Block }) {
       onBlur={handleBlur}
       onInput={handleInput}
       onKeyDown={handleKeyDown}
-      className={`${headingStyles[block.tag]} blockStyle`}
+      // className={`${headingStyles[block.tag]} blockStyle`}
+      className={`
+  blockStyle
+  ${headingStyles[block.tag]}
+  ${block.alignment ? alignmentStyles[block.alignment] : ""}
+`}
     />
   );
 }

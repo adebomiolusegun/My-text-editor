@@ -17,7 +17,8 @@ export const useEditorStore = create<EditorStore>((set, get) => ({
     {
       id: generateId(),
       tag: "p",
-      content: "Start writing...",
+      content: "",
+      alignment: "left",
     },
   ],
 
@@ -65,6 +66,28 @@ export const useEditorStore = create<EditorStore>((set, get) => ({
           }
         : block,
     );
+
+    set({
+      blocks: updatedBlocks,
+    });
+  },
+
+  changeAlignment: (id, alignment) => {
+    const currentBlocks = get().blocks;
+
+    const block = currentBlocks.find((block) => block.id === id);
+
+    if (!block) return;
+
+    const updatedBlocks = currentBlocks.map((block) => {
+      if (block.id === id) {
+        return {
+          ...block,
+          alignment,
+        };
+      }
+      return block;
+    });
 
     set({
       blocks: updatedBlocks,
