@@ -39,6 +39,15 @@ body {
   .fmt-strike {
     text-decoration: line-through;
   }
+  .editorLink {
+    color: #2563eb;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .editorLink:hover {
+    color: #1d4ed8;
+  }
 
   .headerBtn {
     @apply flex items-center justify-center w-8 h-8 rounded hover:bg-bg-hover cursor-pointer;
