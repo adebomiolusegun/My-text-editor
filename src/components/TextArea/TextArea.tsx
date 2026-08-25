@@ -1,6 +1,12 @@
 import { useEditorStore } from "@store/TextEditorStore/TextEditorStore";
 
-import { useEffect, useRef, type ElementType, type KeyboardEvent } from "react";
+import {
+  useEffect,
+  useRef,
+  type ElementType,
+  type KeyboardEvent,
+  type MouseEvent,
+} from "react";
 
 import type { Block } from "../../Types/types";
 
@@ -135,6 +141,18 @@ function TextArea({ block }: { block: Block }) {
     }
   }
 
+  function handleClick(e: MouseEvent<HTMLElement>) {
+    const target = e.target as HTMLElement;
+    const link = target.closest<HTMLAnchorElement>("a.editorLink");
+
+    if (!link) {
+      return;
+    }
+
+    e.preventDefault();
+    window.open(link.href, "_blank", "noopener,noreferrer");
+  }
+
   /*
    * KEYBOARD
    */
@@ -231,9 +249,9 @@ function TextArea({ block }: { block: Block }) {
       suppressContentEditableWarning
       onFocus={handleFocus}
       onBlur={handleBlur}
+      onClick={handleClick}
       onInput={handleInput}
       onKeyDown={handleKeyDown}
-      // className={`${headingStyles[block.tag]} blockStyle`}
       className={`
   blockStyle
   ${headingStyles[block.tag]}
