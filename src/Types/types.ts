@@ -1,11 +1,13 @@
 import type { IconType } from "react-icons";
 
 export type BlockTag = "p" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+export type BlockAlignment = "left" | "center" | "right" | "justify";
 
 export type Block = {
   id: string;
   tag: BlockTag;
   content: string;
+  alignment?: BlockAlignment;
 };
 
 export interface DropDownState {
@@ -38,6 +40,7 @@ export type EditorStore = {
   setBlocks: (blocks: Block[]) => void;
   updateContent: (id: string, content: string) => void;
   changeTag: (id: string, tag: BlockTag) => void;
+  changeAlignment: (id: string, alignment: BlockAlignment) => void;
   addBlockAfter: (id: string) => void;
   deleteBlock: (id: string) => void;
 };

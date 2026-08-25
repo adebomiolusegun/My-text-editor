@@ -80,6 +80,7 @@ body {
   focus-within:ring-2
   focus-within:ring-blue-500;
   } */
+
   .blockStyle {
     @apply outline-none w-full min-h-100 py-2 px-2 wrap-break-word rounded-md border border-border-line
   bg-bg-color;
