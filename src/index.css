@@ -49,6 +49,13 @@ body {
     color: #1d4ed8;
   }
 
+  .editorImage {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0.5rem 0;
+  }
+
   .headerBtn {
     @apply flex items-center justify-center w-8 h-8 rounded hover:bg-bg-hover cursor-pointer;
   }
