@@ -24,6 +24,13 @@ export const useEditorStore = create<EditorStore>((set, get) => ({
 
   activeBlockId: null,
 
+  pendingFocusId: null,
+
+  clearPendingFocus: () =>
+    set({
+      pendingFocusId: null,
+    }),
+
   setActiveBlock: (id) =>
     set({
       activeBlockId: id,
@@ -69,6 +76,7 @@ export const useEditorStore = create<EditorStore>((set, get) => ({
 
     set({
       blocks: updatedBlocks,
+      pendingFocusId: id,
     });
   },
 
@@ -94,33 +102,63 @@ export const useEditorStore = create<EditorStore>((set, get) => ({
     });
   },
 
-  addBlockAfter: (id) => {
-    const currentBlocks = get().blocks;
+  changeListType: (id, listType) => {
+    set((state) => ({
+      blocks: state.blocks.map((block) =>
+        block.id === id
+          ? {
+              ...block,
+              listType,
+            }
+          : block,
+      ),
+      pendingFocusId: id,
+      activeBlockId: id,
+    }));
+  },
 
-    const index = currentBlocks.findIndex((block) => block.id === id);
+  /*
+   * `overrides` lets a caller force specific values on the
+   * new block instead of inheriting from the current one.
+   *
+   * - No `overrides` passed -> inherit tag + listType
+   *   (used by Shift+Enter to continue a list).
+   * - `overrides` passed -> use those values exactly, even
+   *   if a key is explicitly `undefined`
+   *   (used by plain Enter to force a fresh "p" paragraph
+   *   and clear any listType).
+   */
+  addBlockAfter: (id, overrides) => {
+    set((state) => {
+      const index = state.blocks.findIndex((block) => block.id === id);
 
-    const newBlock: Block = {
-      id: generateId(),
-      tag: "p",
-      content: "",
-    };
+      if (index === -1) {
+        return state;
+      }
 
-    if (index === -1) {
-      set({
-        blocks: [...currentBlocks, newBlock],
+      const currentBlock = state.blocks[index];
+
+      const newBlock: Block = {
+        id: generateId(),
+        tag:
+          overrides && "tag" in overrides ? overrides.tag! : currentBlock.tag,
+        content: "",
+        listType:
+          overrides && "listType" in overrides
+            ? overrides.listType
+            : currentBlock.listType,
+        alignment: currentBlock.alignment,
+      };
+
+      const blocks = [...state.blocks];
+
+      blocks.splice(index + 1, 0, newBlock);
+
+      return {
+        blocks,
+        pendingFocusId: newBlock.id,
         activeBlockId: newBlock.id,
-      });
-
-      return;
-    }
-
-    const blocks = [...currentBlocks];
-
-    blocks.splice(index + 1, 0, newBlock);
-
-    set({
-      blocks,
-      activeBlockId: newBlock.id,
+      };
     });
   },
 
@@ -131,7 +169,6 @@ export const useEditorStore = create<EditorStore>((set, get) => ({
 
     set({
       blocks,
-
       activeBlockId: blocks.length > 0 ? blocks[0].id : null,
     });
   },

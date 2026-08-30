@@ -20,3 +20,17 @@ export function getSelection() {
 
   return selection;
 }
+
+export function focusElementEnd(element: HTMLElement): void {
+  element.focus();
+
+  const selection = window.getSelection();
+  if (!selection) return;
+
+  const range = document.createRange();
+  range.selectNodeContents(element);
+  range.collapse(false);
+
+  selection.removeAllRanges();
+  selection.addRange(range);
+}

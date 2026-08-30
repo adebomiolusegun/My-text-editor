@@ -2,6 +2,7 @@ import { useEditorStore } from "@store/TextEditorStore/TextEditorStore";
 
 import {
   useEffect,
+  useMemo,
   useRef,
   type ElementType,
   type KeyboardEvent,
@@ -11,7 +12,7 @@ import {
 import type { Block } from "../../Types/types";
 
 import { saveEditorSnapshot } from "@utilities/saveEditorSnapshot";
-import { setCaret } from "@utilities/caret";
+import { setCaret, focusElementEnd } from "@utilities/caret";
 
 const headingStyles: Record<string, string> = {
   h1: "text-4xl font-bold",
@@ -30,29 +31,53 @@ const alignmentStyles = {
   justify: "text-justify",
 };
 
-const PLACEHOLDER_TEXT = "Start writing...";
+const PLACEHOLDER_TEXT = "";
 
 function TextArea({ block }: { block: Block }) {
   const ref = useRef<HTMLElement | null>(null);
 
-  /*
-   * True when the change came from this
-   * contentEditable itself.
-   *
-   * This prevents our useEffect from
-   * replacing innerHTML while typing.
-   */
   const isLocalChangeRef = useRef(false);
 
-  const { setActiveBlock, updateContent, addBlockAfter } = useEditorStore();
+  const {
+    setActiveBlock,
+    updateContent,
+    addBlockAfter,
+    // changeListType,
+    pendingFocusId,
+    clearPendingFocus,
+  } = useEditorStore();
+
+  const blocks = useEditorStore((state) => state.blocks);
 
   /*
-   * Synchronize Zustand -> DOM.
+   * Self-computed list number: counts how many
+   * consecutive "list-ol" blocks precede (and include)
+   * this one. Independent of any parent grouping logic,
+   * so numbering works no matter how blocks are rendered.
+   */
+  const listItemNumber = useMemo(() => {
+    if (block.listType !== "list-ol") return undefined;
+
+    const index = blocks.findIndex((b) => b.id === block.id);
+    if (index === -1) return 1;
+
+    let count = 1;
+    for (let i = index - 1; i >= 0; i--) {
+      if (blocks[i].listType === "list-ol") {
+        count++;
+      } else {
+        break;
+      }
+    }
+    return count;
+  }, [blocks, block.id, block.listType]);
+
+  /*
+   * Zustand -> DOM
    *
-   * This is needed for Undo / Redo.
-   *
-   * But we MUST NOT do it when the change
-   * came from the user typing.
+   * Mainly needed for undo / redo, and covers cases
+   * where the DOM node type changes (p <-> li) but
+   * content needs to stay in sync.
    */
   useEffect(() => {
     if (!ref.current) {
@@ -64,19 +89,24 @@ function TextArea({ block }: { block: Block }) {
       return;
     }
 
-    /*
-     * This happens for Undo / Redo.
-     *
-     * Update the DOM with the restored content.
-     */
-    if (ref.current.innerHTML !== (block.content || "")) {
-      ref.current.innerHTML = block.content || "";
-    }
-  }, [block.content]);
+    const content = block.content || "";
 
-  if (!block) {
-    return null;
-  }
+    if (ref.current.innerHTML !== content) {
+      ref.current.innerHTML = content;
+    }
+  }, [block.content, block.listType, block.tag]);
+
+  /*
+   * Claim focus when this block is the pending-focus
+   * target — i.e. it was just created, or its DOM node
+   * was just swapped (list toggle / tag change).
+   */
+  useEffect(() => {
+    if (pendingFocusId === block.id && ref.current) {
+      focusElementEnd(ref.current);
+      clearPendingFocus();
+    }
+  }, [pendingFocusId, block.id, clearPendingFocus]);
 
   /*
    * INPUT
@@ -86,13 +116,8 @@ function TextArea({ block }: { block: Block }) {
       return;
     }
 
-    /* Save the state before each input event for character-level undo. */
     saveEditorSnapshot();
 
-    /*
-     * Tell the effect that this update
-     * originated from the contentEditable.
-     */
     isLocalChangeRef.current = true;
 
     updateContent(block.id, ref.current.innerHTML);
@@ -104,9 +129,6 @@ function TextArea({ block }: { block: Block }) {
   function handleFocus() {
     setActiveBlock(block.id);
 
-    /*
-     * Remove placeholder text.
-     */
     if (block.content === PLACEHOLDER_TEXT && ref.current) {
       saveEditorSnapshot();
 
@@ -141,8 +163,12 @@ function TextArea({ block }: { block: Block }) {
     }
   }
 
+  /*
+   * CLICK
+   */
   function handleClick(e: MouseEvent<HTMLElement>) {
     const target = e.target as HTMLElement;
+
     const link = target.closest<HTMLAnchorElement>("a.editorLink");
 
     if (!link) {
@@ -150,6 +176,7 @@ function TextArea({ block }: { block: Block }) {
     }
 
     e.preventDefault();
+
     window.open(link.href, "_blank", "noopener,noreferrer");
   }
 
@@ -160,16 +187,34 @@ function TextArea({ block }: { block: Block }) {
     /*
      * ENTER
      */
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
+    if (e.key === "Enter") {
+      /*
+       * SHIFT+ENTER — continue the list.
+       * Inherits tag + listType, so numbering/bullets
+       * carry on exactly like the current addBlockAfter
+       * default behavior.
+       */
+      if (e.shiftKey) {
+        if (block.listType) {
+          e.preventDefault();
+          saveEditorSnapshot();
+          addBlockAfter(block.id);
+        }
+        /*
+         * Not in a list: let Shift+Enter fall through to
+         * the browser's native soft line break, unchanged.
+         */
+        return;
+      }
 
       /*
-       * Save BEFORE creating the new block.
+       * PLAIN ENTER — always exit to a normal paragraph,
+       * regardless of whether the current block is a list
+       * item, heading, etc.
        */
+      e.preventDefault();
       saveEditorSnapshot();
-
-      addBlockAfter(block.id);
-
+      addBlockAfter(block.id, { tag: "p", listType: undefined });
       return;
     }
 
@@ -177,9 +222,7 @@ function TextArea({ block }: { block: Block }) {
      * BACKSPACE / DELETE
      */
     if (e.key === "Backspace" || e.key === "Delete") {
-      /* Save the state before each deletion for character-level undo. */
       saveEditorSnapshot();
-
       return;
     }
 
@@ -217,18 +260,12 @@ function TextArea({ block }: { block: Block }) {
 
     e.preventDefault();
 
-    /*
-     * Save before changing the DOM.
-     */
     saveEditorSnapshot();
 
     const space = document.createTextNode(" ");
 
     formattedSpan.after(space);
 
-    /*
-     * Put caret after the inserted space.
-     */
     setCaret(space, space.length);
 
     if (ref.current) {
@@ -238,25 +275,34 @@ function TextArea({ block }: { block: Block }) {
     }
   }
 
-  const Tag = block.tag as ElementType;
+  const isList = Boolean(block.listType);
+  const Tag = isList ? "li" : (block.tag as ElementType);
 
   return (
     <Tag
       ref={(node: HTMLElement | null) => {
         ref.current = node;
+
+        if (node && node.innerHTML !== (block.content || "")) {
+          node.innerHTML = block.content || "";
+        }
       }}
       contentEditable
       suppressContentEditableWarning
+      data-list-index={
+        block.listType === "list-ol" ? listItemNumber : undefined
+      }
       onFocus={handleFocus}
       onBlur={handleBlur}
       onClick={handleClick}
       onInput={handleInput}
       onKeyDown={handleKeyDown}
       className={`
-  blockStyle
-  ${headingStyles[block.tag]}
-  ${block.alignment ? alignmentStyles[block.alignment] : ""}
-`}
+        blockStyle
+        ${isList ? `listItemStyle ${block.listType}` : ""}
+        ${isList ? headingStyles.p : headingStyles[block.tag]}
+        ${block.alignment ? alignmentStyles[block.alignment] : ""}
+      `}
     />
   );
 }

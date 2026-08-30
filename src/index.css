@@ -21,6 +21,7 @@
   --color-textarea-border: #6a7282;
   --color-text-color: #ffffff;
 }
+
 body {
   background-color: var(--color-bg-color);
   color: var(--color-text-color);
@@ -44,11 +45,9 @@ body {
     text-decoration: underline;
     cursor: pointer;
   }
-
   .editorLink:hover {
     color: #1d4ed8;
   }
-
   .editorImage {
     display: block;
     max-width: 100%;
@@ -59,12 +58,14 @@ body {
   .headerBtn {
     @apply flex items-center justify-center w-8 h-8 rounded hover:bg-bg-hover cursor-pointer;
   }
-
   .headerActionDivider {
     @apply flex gap-4 justify-around items-center rounded-md h-7;
   }
   .toolsBarBtn {
     @apply flex items-center justify-center w-8 h-8 rounded hover:bg-bg-hover cursor-pointer;
+  }
+  .activeListOption {
+    @apply bg-bg-hover;
   }
   .borderRight {
     @apply border-r pr-3 border-border-line;
@@ -73,7 +74,7 @@ body {
     @apply w-full border-b border-border-line;
   }
   .toolsbarSecDivContainer {
-    @apply flex gap-4 h-11 px-4 scroll-m-2 mx-auto items-center overflow-x-auto whitespace-nowrap sm:overflow-visible sm:px-4 w-full sm:w-4/5  md:w-3/4 lg:w-1/2 lg:px-0;
+    @apply flex gap-4 h-11 px-4 scroll-m-2 mx-auto items-center overflow-x-auto whitespace-nowrap sm:overflow-visible sm:px-4 w-full sm:w-4/5 md:w-3/4 lg:w-1/2 lg:px-0;
   }
   .dropdownContainer {
     @apply z-50 flex flex-col absolute bg-drop-down shadow-lg rounded-md px-4 py-2;
@@ -81,25 +82,18 @@ body {
   .dropdownContent {
     @apply flex flex-col mt-2 hover:bg-bg-hover cursor-pointer rounded-md px-2 py-1;
   }
-  /* .editorContainer {
-    @apply mt-2 min-h-96
-  w-full
-  sm:w-4/5
-  md:w-3/4
-  lg:w-1/2
-  p-4
-  rounded-lg
-  border
-  bg-bg-color
-  border-border-line
-  text-text-color
-  focus-within:ring-2
-  focus-within:ring-blue-500;
-  } */
 
+  /*
+   * Each individual block (paragraph, heading, list item)
+   * should only be as tall as its own content — NOT a fixed
+   * 400px box. The old min-h-100 here meant every new block
+   * rendered as its own giant bordered box, which is what
+   * looked like "a new textarea" appearing on every Enter/
+   * Shift+Enter.
+   */
   .blockStyle {
-    @apply outline-none w-full min-h-100 py-2 px-2 wrap-break-word rounded-md border border-border-line
-  bg-bg-color;
+    @apply outline-none  min-h-100 w-full py-1  wrap-break-word;
+
     position: relative;
   }
 
@@ -109,8 +103,59 @@ body {
     pointer-events: none;
     position: absolute;
     left: 0.5rem;
-    top: 0.5rem;
+    top: 0.25rem;
   }
+
+  /*
+   * The whole editor is now ONE bordered surface
+   * (see .editorCanvas in Editor.tsx) instead of every
+   * block having its own border. This is what actually
+   * gives you the "single document" feel you're going for,
+   * instead of a stack of separate boxed inputs.
+   */
+  .editorCanvas {
+    @apply w-full min-h-100 rounded-md border border-border-line bg-bg-color p-4;
+  }
+  .editorList {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem; /* tight spacing between list lines, unlike gap-2 between paragraph blocks */
+  }
+
+  .blockStyle.listItemStyle {
+    padding-left: 1.75rem;
+    min-height: 1.5rem;
+  }
+
+  .blockStyle.listItemStyle::before {
+    position: absolute;
+    left: 0.5rem;
+    top: 0.25rem;
+    color: inherit;
+    user-select: none;
+  }
+
+  .blockStyle.listItemStyle.list-ol::before {
+    content: attr(data-list-index) ".";
+  }
+
+  .blockStyle.listItemStyle.list-ul::before {
+    content: "•";
+  }
+
+  .blockStyle.listItemStyle.list-circle::before {
+    content: "◦";
+  }
+
+  .editorList {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+
   .footerStyle {
     @apply flex mt-4 gap-4 justify-center items-center text-gray-500;
   }
