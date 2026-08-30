@@ -2,7 +2,9 @@
 
 import { useEditorStore } from "@store/TextEditorStore/TextEditorStore";
 import TextArea from "@components/TextArea/TextArea";
+import { focusElementEnd } from "@utilities/caret";
 import type { Block } from "@Types/types";
+import type { MouseEvent } from "react";
 
 function Editor() {
   const blocks = useEditorStore((s) => s.blocks);
@@ -19,27 +21,45 @@ function Editor() {
     }
   }
 
+  /*
+   * Clicking anywhere in the canvas that ISN'T already
+   * inside a contentEditable line (e.g. empty space below
+   * the last block, or gaps around list wrappers) should
+   * still focus an editable line — matching how a normal
+   * text editor feels, since the canvas itself is not
+   * editable, only individual blocks are.
+   */
+  function handleCanvasClick(e: MouseEvent<HTMLDivElement>) {
+    const target = e.target as HTMLElement;
+
+    if (target.closest('[contenteditable="true"]')) {
+      return;
+    }
+
+    const container = e.currentTarget;
+    const editables = container.querySelectorAll<HTMLElement>(
+      '[contenteditable="true"]',
+    );
+    const last = editables[editables.length - 1];
+
+    if (last) {
+      focusElementEnd(last);
+    }
+  }
+
   return (
     <div className="mx-auto mt-4 w-full max-w-3xl px-4">
-      <div className="editorCanvas flex flex-col gap-2">
+      <div
+        className="editorCanvas flex flex-col gap-2 cursor-text"
+        onClick={handleCanvasClick}
+      >
         {groups.map((group) => {
           if (!group.listType) {
-            /*
-             * Not a list: render each block on its own,
-             * still with normal spacing between paragraphs
-             * / headings.
-             */
             return group.items.map((block) => (
               <TextArea key={`${block.id}-${block.tag}`} block={block} />
             ));
           }
 
-          /*
-           * A list: ALL consecutive same-type items share
-           * ONE <ol>/<ul>. This is what makes numbering and
-           * spacing feel like a single continuous list rather
-           * than separate boxes stacked up.
-           */
           const ListTag = group.listType === "list-ol" ? "ol" : "ul";
           const key = group.items[0].id;
 

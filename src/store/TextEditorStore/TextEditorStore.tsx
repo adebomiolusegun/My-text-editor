@@ -117,17 +117,6 @@ export const useEditorStore = create<EditorStore>((set, get) => ({
     }));
   },
 
-  /*
-   * `overrides` lets a caller force specific values on the
-   * new block instead of inheriting from the current one.
-   *
-   * - No `overrides` passed -> inherit tag + listType
-   *   (used by Shift+Enter to continue a list).
-   * - `overrides` passed -> use those values exactly, even
-   *   if a key is explicitly `undefined`
-   *   (used by plain Enter to force a fresh "p" paragraph
-   *   and clear any listType).
-   */
   addBlockAfter: (id, overrides) => {
     set((state) => {
       const index = state.blocks.findIndex((block) => block.id === id);
@@ -158,6 +147,49 @@ export const useEditorStore = create<EditorStore>((set, get) => ({
         blocks,
         pendingFocusId: newBlock.id,
         activeBlockId: newBlock.id,
+      };
+    });
+  },
+
+  /*
+   * Merges the block at `id` into the block directly above it:
+   * previous block's content gets the current block's content
+   * appended, current block is removed, and focus moves to the
+   * (now merged) previous block.
+   *
+   * Used by Backspace at the start of a line, once that line
+   * is already a plain paragraph (list formatting, if any, is
+   * cleared on the FIRST Backspace via changeListType — this
+   * only runs on the following Backspace).
+   *
+   * Does nothing if there's no previous block to merge into.
+   */
+  mergeBlockUp: (id) => {
+    set((state) => {
+      const index = state.blocks.findIndex((block) => block.id === id);
+
+      if (index <= 0) {
+        return state;
+      }
+
+      const current = state.blocks[index];
+      const previous = state.blocks[index - 1];
+
+      const mergedContent = (previous.content || "") + (current.content || "");
+
+      const blocks = [...state.blocks];
+
+      blocks[index - 1] = {
+        ...previous,
+        content: mergedContent,
+      };
+
+      blocks.splice(index, 1);
+
+      return {
+        blocks,
+        activeBlockId: previous.id,
+        pendingFocusId: previous.id,
       };
     });
   },

@@ -92,9 +92,22 @@ body {
    * Shift+Enter.
    */
   .blockStyle {
-    @apply outline-none  min-h-100 w-full py-1  wrap-break-word;
-
+    @apply outline-none w-full py-1 px-2 wrap-break-word;
+    min-height: 1.5rem;
     position: relative;
+  }
+
+  .blockStyle:empty:before {
+    content: attr(data-placeholder);
+    color: var(--color-placeholder);
+    pointer-events: none;
+    position: absolute;
+    left: 0.5rem;
+    top: 0.25rem;
+  }
+
+  .editorCanvas {
+    @apply w-full min-h-100 rounded-md border border-border-line bg-bg-color p-4;
   }
 
   .blockStyle:empty:before {
@@ -115,14 +128,6 @@ body {
    */
   .editorCanvas {
     @apply w-full min-h-100 rounded-md border border-border-line bg-bg-color p-4;
-  }
-  .editorList {
-    list-style: none;
-    padding-left: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.125rem; /* tight spacing between list lines, unlike gap-2 between paragraph blocks */
   }
 
   .blockStyle.listItemStyle {
