@@ -2,12 +2,14 @@ import type { IconType } from "react-icons";
 
 export type BlockTag = "p" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 export type BlockAlignment = "left" | "center" | "right" | "justify";
+export type listType = "list-ol" | "list-ul" | "list-circle";
 
 export type Block = {
   id: string;
   tag: BlockTag;
   content: string;
   alignment?: BlockAlignment;
+  listType?: listType;
 };
 
 export interface DropDownState {
@@ -41,7 +43,13 @@ export type EditorStore = {
   updateContent: (id: string, content: string) => void;
   changeTag: (id: string, tag: BlockTag) => void;
   changeAlignment: (id: string, alignment: BlockAlignment) => void;
-  addBlockAfter: (id: string) => void;
+  changeListType: (id: string, listType?: listType) => void;
+  addBlockAfter: (
+    id: string,
+    overrides?: { tag?: Block["tag"]; listType?: Block["listType"] },
+  ) => void;
+  pendingFocusId: string | null;
+  clearPendingFocus: () => void;
   deleteBlock: (id: string) => void;
 };
 export interface TextFormatProps {
