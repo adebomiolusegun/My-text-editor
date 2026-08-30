@@ -48,6 +48,7 @@ export type EditorStore = {
     id: string,
     overrides?: { tag?: Block["tag"]; listType?: Block["listType"] },
   ) => void;
+  mergeBlockUp: (id: string) => void;
   pendingFocusId: string | null;
   clearPendingFocus: () => void;
   deleteBlock: (id: string) => void;

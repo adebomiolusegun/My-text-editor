@@ -42,19 +42,14 @@ function TextArea({ block }: { block: Block }) {
     setActiveBlock,
     updateContent,
     addBlockAfter,
-    // changeListType,
+    changeListType,
+    mergeBlockUp,
     pendingFocusId,
     clearPendingFocus,
   } = useEditorStore();
 
   const blocks = useEditorStore((state) => state.blocks);
 
-  /*
-   * Self-computed list number: counts how many
-   * consecutive "list-ol" blocks precede (and include)
-   * this one. Independent of any parent grouping logic,
-   * so numbering works no matter how blocks are rendered.
-   */
   const listItemNumber = useMemo(() => {
     if (block.listType !== "list-ol") return undefined;
 
@@ -72,13 +67,6 @@ function TextArea({ block }: { block: Block }) {
     return count;
   }, [blocks, block.id, block.listType]);
 
-  /*
-   * Zustand -> DOM
-   *
-   * Mainly needed for undo / redo, and covers cases
-   * where the DOM node type changes (p <-> li) but
-   * content needs to stay in sync.
-   */
   useEffect(() => {
     if (!ref.current) {
       return;
@@ -96,11 +84,6 @@ function TextArea({ block }: { block: Block }) {
     }
   }, [block.content, block.listType, block.tag]);
 
-  /*
-   * Claim focus when this block is the pending-focus
-   * target — i.e. it was just created, or its DOM node
-   * was just swapped (list toggle / tag change).
-   */
   useEffect(() => {
     if (pendingFocusId === block.id && ref.current) {
       focusElementEnd(ref.current);
@@ -108,9 +91,6 @@ function TextArea({ block }: { block: Block }) {
     }
   }, [pendingFocusId, block.id, clearPendingFocus]);
 
-  /*
-   * INPUT
-   */
   function handleInput() {
     if (!ref.current) {
       return;
@@ -123,9 +103,6 @@ function TextArea({ block }: { block: Block }) {
     updateContent(block.id, ref.current.innerHTML);
   }
 
-  /*
-   * FOCUS
-   */
   function handleFocus() {
     setActiveBlock(block.id);
 
@@ -140,9 +117,6 @@ function TextArea({ block }: { block: Block }) {
     }
   }
 
-  /*
-   * BLUR
-   */
   function handleBlur() {
     if (!ref.current) {
       return;
@@ -163,9 +137,6 @@ function TextArea({ block }: { block: Block }) {
     }
   }
 
-  /*
-   * CLICK
-   */
   function handleClick(e: MouseEvent<HTMLElement>) {
     const target = e.target as HTMLElement;
 
@@ -181,37 +152,41 @@ function TextArea({ block }: { block: Block }) {
   }
 
   /*
-   * KEYBOARD
+   * Returns true if the caret is collapsed at the very
+   * start (offset 0) of this element's own text content.
    */
+  function isCaretAtStart(): boolean {
+    if (!ref.current) return false;
+
+    const selection = window.getSelection();
+
+    if (!selection || selection.rangeCount === 0 || !selection.isCollapsed) {
+      return false;
+    }
+
+    const range = selection.getRangeAt(0);
+
+    const preRange = range.cloneRange();
+    preRange.selectNodeContents(ref.current);
+    preRange.setEnd(range.startContainer, range.startOffset);
+
+    return preRange.toString().length === 0;
+  }
+
   function handleKeyDown(e: KeyboardEvent<HTMLElement>) {
     /*
      * ENTER
      */
     if (e.key === "Enter") {
-      /*
-       * SHIFT+ENTER — continue the list.
-       * Inherits tag + listType, so numbering/bullets
-       * carry on exactly like the current addBlockAfter
-       * default behavior.
-       */
       if (e.shiftKey) {
         if (block.listType) {
           e.preventDefault();
           saveEditorSnapshot();
           addBlockAfter(block.id);
         }
-        /*
-         * Not in a list: let Shift+Enter fall through to
-         * the browser's native soft line break, unchanged.
-         */
         return;
       }
 
-      /*
-       * PLAIN ENTER — always exit to a normal paragraph,
-       * regardless of whether the current block is a list
-       * item, heading, etc.
-       */
       e.preventDefault();
       saveEditorSnapshot();
       addBlockAfter(block.id, { tag: "p", listType: undefined });
@@ -219,9 +194,46 @@ function TextArea({ block }: { block: Block }) {
     }
 
     /*
-     * BACKSPACE / DELETE
+     * BACKSPACE
+     *
+     * At the start of a line:
+     *  1) If it's a list item -> clear the bullet/number
+     *     first (text stays, block becomes a paragraph).
+     *  2) If it's already a plain paragraph (and not the
+     *     first block) -> merge it into the previous block
+     *     and move the caret up, deleting this line.
+     *
+     * This means: bulleted line -> Backspace clears the
+     * bullet -> Backspace again merges up into the line
+     * above, matching Notion/Docs.
      */
-    if (e.key === "Backspace" || e.key === "Delete") {
+    if (e.key === "Backspace") {
+      if (isCaretAtStart()) {
+        if (block.listType) {
+          e.preventDefault();
+          saveEditorSnapshot();
+          changeListType(block.id, undefined);
+          return;
+        }
+
+        const index = blocks.findIndex((b) => b.id === block.id);
+
+        if (index > 0) {
+          e.preventDefault();
+          saveEditorSnapshot();
+          mergeBlockUp(block.id);
+          return;
+        }
+      }
+
+      saveEditorSnapshot();
+      return;
+    }
+
+    /*
+     * DELETE (forward delete) — unchanged.
+     */
+    if (e.key === "Delete") {
       saveEditorSnapshot();
       return;
     }
@@ -282,13 +294,15 @@ function TextArea({ block }: { block: Block }) {
     <Tag
       ref={(node: HTMLElement | null) => {
         ref.current = node;
-
         if (node && node.innerHTML !== (block.content || "")) {
           node.innerHTML = block.content || "";
         }
       }}
       contentEditable
       suppressContentEditableWarning
+      data-gramm="false"
+      data-gramm_editor="false"
+      data-enable-grammarly="false"
       data-list-index={
         block.listType === "list-ol" ? listItemNumber : undefined
       }
