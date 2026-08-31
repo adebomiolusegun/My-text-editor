@@ -3,7 +3,7 @@ import { CiSun } from "react-icons/ci";
 import { LuMoonStar } from "react-icons/lu";
 import { useEffect } from "react";
 
-import Profile from "./Profile";
+// import Profile from "./Profile";
 import { useDarkModeStore } from "@store/DarkModeStore/DarkModeStore";
 
 // import { LuUndo } from "react-icons/lu";
@@ -30,9 +30,6 @@ function HeaderActions() {
             {darkMode ? <CiSun /> : <LuMoonStar />}
           </button>
         </div>
-        <button className="headerBtn">
-          <Profile />
-        </button>
       </div>
     </div>
   );

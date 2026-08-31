@@ -107,7 +107,7 @@ body {
   }
 
   .editorCanvas {
-    @apply w-full min-h-100 rounded-md border border-border-line bg-bg-color p-4;
+    @apply w-full min-h-100 rounded-md border border-border-line bg-bg-color p-2;
   }
 
   .blockStyle:empty:before {
