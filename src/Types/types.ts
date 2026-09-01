@@ -75,3 +75,9 @@ export interface RedoUndoState {
 
   redoAction: () => Block[] | null;
 }
+
+export interface DownloadFileState {
+  content: string;
+  filename: string;
+  mimeType: string;
+}
