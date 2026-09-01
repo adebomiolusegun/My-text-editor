@@ -50,7 +50,7 @@ function Editor() {
   return (
     <div className="mx-auto mt-4 w-full max-w-3xl px-4">
       <div
-        className="editorCanvas flex flex-col gap-2 cursor-text"
+        className="editorCanvas flex flex-col gap-0 cursor-text"
         onClick={handleCanvasClick}
       >
         {groups.map((group) => {

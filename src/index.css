@@ -40,6 +40,36 @@ body {
   .fmt-strike {
     text-decoration: line-through;
   }
+
+  /* Heading span styles for selected text */
+  .heading-span {
+    font-weight: 600;
+  }
+  .heading-span.heading-h1 {
+    font-size: 2rem;
+    font-weight: 700;
+  }
+  .heading-span.heading-h2 {
+    font-size: 1.875rem;
+    font-weight: 600;
+  }
+  .heading-span.heading-h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  .heading-span.heading-h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+  .heading-span.heading-h5 {
+    font-size: 1.125rem;
+    font-weight: 600;
+  }
+  .heading-span.heading-h6 {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
   .editorLink {
     color: #2563eb;
     text-decoration: underline;

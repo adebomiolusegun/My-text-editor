@@ -17,6 +17,7 @@ import {
 } from "react-icons/md";
 
 import formatSelection from "@utilities/formatSelection";
+import applyHeadingToSelection from "@utilities/applyHeadingToSelection";
 import useDropDownHandler from "@utilities/useDropDownHandler";
 
 import { OptionDropDownStore } from "@store/OptionDropDown/OptionDropDown";
@@ -78,8 +79,25 @@ function TextFormat({ id }: TextFormatProps) {
 
                   setOptions(id, Icon);
 
+                  // Check if text is selected
+                  const selection = window.getSelection();
+                  const isTextSelected =
+                    selection &&
+                    !selection.isCollapsed &&
+                    selection.toString().trim();
+
                   if (activeBlockId) {
-                    changeTag(activeBlockId, tag); // 🔥 FULL BLOCK CHANGE
+                    if (isTextSelected) {
+                      // Apply heading to selected text only
+                      applyHeadingToSelection(
+                        "headingLevel",
+                        tag,
+                        handleUpdate,
+                      );
+                    } else {
+                      // Apply heading to entire block
+                      changeTag(activeBlockId, tag);
+                    }
                   }
 
                   handleDropdown(e);
