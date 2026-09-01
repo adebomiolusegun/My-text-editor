@@ -89,11 +89,7 @@ function TextFormat({ id }: TextFormatProps) {
                   if (activeBlockId) {
                     if (isTextSelected) {
                       // Apply heading to selected text only
-                      applyHeadingToSelection(
-                        "headingLevel",
-                        tag,
-                        handleUpdate,
-                      );
+                      applyHeadingToSelection(tag, handleUpdate);
                     } else {
                       // Apply heading to entire block
                       changeTag(activeBlockId, tag);

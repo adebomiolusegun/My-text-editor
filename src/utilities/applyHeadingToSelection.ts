@@ -6,11 +6,9 @@ import { saveEditorSnapshot } from "./saveEditorSnapshot";
  * If text is selected, it wraps the selected content in a heading span.
  * If nothing is selected, it applies the heading to the entire block.
  *
- * property: "headingLevel" (we'll store this as a data attribute)
  * value: "h1", "h2", "h3", etc.
  */
 function applyHeadingToSelection(
-  property: string,
   value: string,
   onUpdate?: (content: string) => void,
 ) {
