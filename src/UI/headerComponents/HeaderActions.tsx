@@ -6,8 +6,6 @@ import { LuMoonStar } from "react-icons/lu";
 import Profile from "./Profile";
 import { useDarkModeStore } from "@store/DarkModeStore/DarkModeStore";
 import { useEditorStore } from "@store/TextEditorStore/TextEditorStore";
-import { exportAsJson } from "@utilities/exportJson";
-import { exportAsHtml } from "@utilities/exportHtml";
 import { exportAsPdf } from "@utilities/exportPdf";
 import { exportAsDocx } from "@utilities/exportDocx";
 
@@ -44,18 +42,8 @@ function HeaderActions() {
     return () => document.removeEventListener("mousedown", handleOutsideClick);
   }, []);
 
-  function handleExport(format: "json" | "html" | "pdf" | "docx") {
+  function handleExport(format: "pdf" | "docx") {
     setIsSaveMenuOpen(false);
-
-    if (format === "json") {
-      exportAsJson(blocks);
-      return;
-    }
-
-    if (format === "html") {
-      exportAsHtml(blocks);
-      return;
-    }
 
     if (format === "docx") {
       exportAsDocx(blocks);
@@ -85,20 +73,6 @@ function HeaderActions() {
 
           {isSaveMenuOpen && (
             <div className="dropdownContainer">
-              <button
-                type="button"
-                className="dropdownContent"
-                onClick={() => handleExport("json")}
-              >
-                Export as JSON
-              </button>
-              <button
-                type="button"
-                className="dropdownContent"
-                onClick={() => handleExport("html")}
-              >
-                Export as HTML
-              </button>
               <button
                 type="button"
                 className="dropdownContent"
