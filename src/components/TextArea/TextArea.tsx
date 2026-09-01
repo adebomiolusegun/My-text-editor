@@ -187,9 +187,26 @@ function TextArea({ block }: { block: Block }) {
         return;
       }
 
+      // Insert <br> tag for line break without extra space
       e.preventDefault();
       saveEditorSnapshot();
-      addBlockAfter(block.id, { tag: "p", listType: undefined });
+
+      const selection = window.getSelection();
+      if (!selection || selection.rangeCount === 0) return;
+
+      const range = selection.getRangeAt(0);
+      const br = document.createElement("br");
+      range.deleteContents();
+      range.insertNode(br);
+      range.setStartAfter(br);
+      range.collapse(true);
+      selection.removeAllRanges();
+      selection.addRange(range);
+
+      if (ref.current) {
+        isLocalChangeRef.current = true;
+        updateContent(block.id, ref.current.innerHTML);
+      }
       return;
     }
 
